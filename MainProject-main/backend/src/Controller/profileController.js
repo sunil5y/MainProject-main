@@ -1,4 +1,4 @@
-const domain = "http://localhost:1000";
+const domain = "http://localhost:5000";
 const UserProfiles = require("../Models/userProfile");
 
 // Helper function to send error responses

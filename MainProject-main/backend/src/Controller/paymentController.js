@@ -1,42 +1,65 @@
-const Payment = require("../Models/paymentModel");
-const domain = "http://localhost:1000";
+const Checkout = require('../Models/paymentModel');
+const Product = require('../Models/bookModel');
+const User = require('../Models/authUserModel');
 
-// Helper function to send error responses
-const sendErrorResponse = (res, error) => {
-  console.log(error);
-  res.status(500).json({ msg: error.message });
-};
-
-// Payment
-const paymentBike = async (req, res) => {
+const createCheckout = async (req, res) => {
   try {
-    const {
+    // Extract data from the request body
+    const { book, name, number, expiration, cvv } = req.body;
+    const userId = req.user.id;
+
+    // Create a new checkout entry
+    const checkout = new Checkout({
+      user: userId,
+      book,
       name,
       number,
       expiration,
-      cvv,
-    } = req.body;
-    let paymentData = {
-      name,
-      number,
-      expiration,
-      cvv,
-    };
+      cvv
+    });
 
-    const payment = new Payment(paymentData); 
-    await payment.save();
+    // Save the checkout entry to the database
+    await checkout.save();
 
+    // Respond with the created checkout
     res.status(201).json({
-      msg: "Payment done successfully",
-      payment: payment,
-      success: true,
+      message: 'Checkout created successfully',
+      checkout
     });
   } catch (error) {
-    sendErrorResponse(res, error);
+    // Handle any errors
+    console.error('Error creating checkout:', error);
+    res.status(500).json({
+      message: 'Error creating checkout',
+      error: error.message
+    });
+  }
+};
+
+const payment = async (req, res) => {
+  try {
+    // Log to verify the request is reaching this point
+    console.log('Fetching all payments...');
+    
+    const payments = await Checkout.find()
+      .populate('user', 'name email') // Populate user details
+      .populate('book', 'title'); // Populate book details
+    
+    // Log the fetched payments for debugging
+    console.log('Payments fetched:', payments);
+    
+    res.status(200).json(payments);
+  } catch (error) {
+    console.error('Error fetching payments:', error);
+    res.status(500).json({ msg: error.message });
   }
 };
 
 
+
 module.exports = {
-    paymentBike,
+  createCheckout,
+  payment
 };
+
+

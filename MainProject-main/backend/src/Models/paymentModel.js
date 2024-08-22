@@ -1,24 +1,36 @@
-const mongoose=require('mongoose');
-const {Schema}=mongoose;    
+const mongoose = require('mongoose');
 
-const paymentSchema=new Schema({
-    name:{
-        type:String,
-        required:true,
-    },
-    number:{
-        type:String,
-        required:true
-    },
-    expiration:{
-        type:String,
-        required:true
-    },
-    cvv:{
-        type:String,
-        required:true
-    },
-});
+const checkoutSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  book: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Book',
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  number: {
+    type: String,
+    required: true,
+ 
+  },
+  expiration: {
+    type: String,
+    required: true
+  },
+  cvv: {
+    type: String,
+    required: true,
+  },
 
-const Payment=mongoose.model('Payment', paymentSchema);
-module.exports=Payment;
+}, );
+
+const Checkout = mongoose.model('Checkout', checkoutSchema);
+
+module.exports = Checkout;

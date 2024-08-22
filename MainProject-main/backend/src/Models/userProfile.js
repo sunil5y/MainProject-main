@@ -7,7 +7,7 @@ const profileSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    fulname: {
+    fullname: {
         type: String,
     },
     address: {
