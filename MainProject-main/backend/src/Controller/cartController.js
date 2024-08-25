@@ -138,7 +138,7 @@ exports.addToCart = async (req, res) => {
         cart.books[itemIndex].quantity += 1;
       } else {
         // Book does not exists in cart, add new item
-        cart.books.push({ book: bookId, quantity: 1 });
+        cart.books.push({ book: bookId, quantity: 1});
       }
 
       cart = await cart.save();

@@ -1,6 +1,7 @@
 const Checkout = require('../Models/paymentModel');
 const Product = require('../Models/bookModel');
 const User = require('../Models/authUserModel');
+const Order = require('../Models/orderModel');
 
 const createCheckout = async (req, res) => {
   try {
@@ -20,6 +21,15 @@ const createCheckout = async (req, res) => {
 
     // Save the checkout entry to the database
     await checkout.save();
+
+    // After successful checkout, create a new Order
+    const order = new Order({
+      user: userId,
+      book: book, // The book purchased
+      status: 'Pending', // Initial status of the order
+    });
+
+    await order.save(); // Save the order in the Order database
 
     // Respond with the created checkout
     res.status(201).json({

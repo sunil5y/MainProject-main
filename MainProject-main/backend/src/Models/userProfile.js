@@ -28,6 +28,10 @@ const profileSchema = new mongoose.Schema({
     zipCode: {
         type: Number,
     },
+    ProfilePic:{
+        type:String,
+        required:false,
+    }
 });
 
 module.exports = mongoose.model('Profile', profileSchema);

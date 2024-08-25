@@ -15,6 +15,7 @@ const CheckoutComponent = () => {
   const [formErrors, setFormErrors] = useState({});
   const [success, setSuccess] = useState(false);
   const [showFullImage, setShowFullImage] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -27,8 +28,24 @@ const CheckoutComponent = () => {
         console.error('Error fetching book details:', error);
       }
     };
+    const fetchCartTotalPrice = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:1000/api/cart/', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const cart = response.data.cart;
+        const total = cart.books.reduce((acc, item) => acc + (item.totalPrice || 0), 0);
+        setTotalPrice(total);
+      } catch (error) {
+        console.error('Error fetching cart total price:', error);
+      }
+    };
 
     fetchBook();
+    fetchCartTotalPrice();
   }, [id]);
 
   const handlePaymentFormChange = (e) => {
@@ -71,7 +88,16 @@ const CheckoutComponent = () => {
         setSuccess(true);
       } catch (error) {
         console.error('Checkout error:', error);
-        setFormErrors({ submit: 'An error occurred during checkout. Please try again.' });
+        let errorMessage = 'An error occurred during checkout. Please try again.';
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          errorMessage = error.response.data.message || errorMessage;
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = 'No response received from server. Please try again.';
+        }
+        setFormErrors({ submit: errorMessage });
       }
     }
   };
@@ -197,7 +223,7 @@ const CheckoutComponent = () => {
             </div>
             <div className="p-8">
               <h3 className="text-2xl font-bold text-gray-800 mb-4">{book.title}</h3>
-              <p className="text-4xl font-bold text-indigo-600">Rs. {book.Price}</p>
+              <p className="text-4xl font-bold text-indigo-600">Rs.{totalPrice}</p>
             </div>
           </div>
         </div>

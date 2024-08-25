@@ -54,9 +54,9 @@ const AdminDashboard = () => {
         animate="visible"
       >
         {[
-          { title: "Books", image: Book, onClick: handleBooks },
+          { title: "Manage Books", image: Book, onClick: handleBooks },
           { title: "Users", image: User, onClick: handleUsers },
-          { title: "Reports", image: Book, onClick: handleOrders }
+          { title: "Orders", image: Book, onClick: handleOrders }
         ].map((item, index) => (
           <motion.div
             key={index}
