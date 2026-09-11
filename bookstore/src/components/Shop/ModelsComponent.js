@@ -172,6 +172,7 @@ const ModelsComponent = () => {
                       alt={book.title}
                       className="w-full h-full object-cover transition-transform transform hover:scale-110 cursor-pointer"
                     />
+                    
                   </div>
                   <label className="text-sm font-bold text-gray-800 mt-1">Rs. {book.Price}</label>
                   <p className="text-xs text-gray-600 mt-1 truncate w-full text-center">{book.author}</p>
